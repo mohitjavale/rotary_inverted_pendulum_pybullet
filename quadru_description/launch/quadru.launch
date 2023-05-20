@@ -1,0 +1,18 @@
+<launch>
+
+<rosparam file="$(find quadru_description)/launch/controller.yaml" command="load"/>
+<param name="robot_description" command="$(find xacro)/xacro $(find quadru_description)/urdf/quadru.xacro"/>
+<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model quadru"/>
+<include file="$(find gazebo_ros)/launch/empty_world.launch">
+  <arg name="paused" value="false"/>
+  <arg name="use_sim_time" value="true"/>
+  <arg name="gui" value="true"/>
+  <arg name="headless" value="false"/>
+  <arg name="debug" value="false"/>
+</include>
+<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="quadru" args="fl1_position_controller fl2_position_controller fl3_position_controller bl1_position_controller bl2_position_controller br1_position_controller br2_position_controller br3_position_controller bl3_position_controller fr1_position_controller fr2_position_controller fr3_position_controller joint_state_controller "/>
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+  <remap from="/joint_states" to="/quadru/joint_states"/>
+</node>
+
+</launch>
