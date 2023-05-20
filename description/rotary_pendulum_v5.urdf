@@ -1,0 +1,123 @@
+<?xml version="1.0" ?>
+<robot name="rotary_pendulum_v5">
+
+<material name="red">
+  <color rgba="1 0 0 1.000"/>
+</material>
+
+<material name="green">
+  <color rgba="0 1 00 1.000"/>
+</material>
+
+<material name="blue">
+  <color rgba="0 0 1 1.000"/>
+</material>
+
+<material name="silver">
+  <color rgba="0.700 0.700 0.700 1.000"/>
+</material>
+
+<link name="base_link">
+  <inertial>
+    <origin xyz="0.0 0.0 0.15000000000000002" rpy="0 0 0"/>
+    <mass value="211.95000000000002"/>
+    <inertia ixx="3.179249999999999" iyy="3.179249999999999" izz="3.1792499999999997" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="red"/>
+    <material/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="rotary_link1">
+  <inertial>
+    <origin xyz="0.008013705761337671 -1.6309157073718057e-17 0.030000000000000082" rpy="0 0 0"/>
+    <mass value="8.755245138233084"/>
+    <inertia ixx="0.014223163597166022" iyy="0.026150131302430935" izz="0.03535774814593225" ixy="-1.2567535854514075e-17" iyz="-3.569766704458744e-17" ixz="-3.8163916471489756e-17"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 -0.0 -0.3" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/rotary_link1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+    <material/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0 -0.0 -0.3" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/rotary_link1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="pendulum_link1">
+  <inertial>
+    <origin xyz="-0.009999999999999926 -3.9119026865169275e-17 0.11180084116382871" rpy="0 0 0"/>
+    <mass value="0.7414385478886268"/>
+    <inertia ixx="0.005226682201548649" iyy="0.005213064334280343" izz="5.31289244029981e-05" ixy="-6.470202151831489e-19" iyz="-2.4618247609762185e-18" ixz="1.3877787807814457e-17"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.25 -0.0 -0.33" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/pendulum_link1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="blue"/>
+    <material/>
+  </visual>
+  <collision>
+    <origin xyz="-0.25 -0.0 -0.33" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="meshes/pendulum_link1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="Revolute_1" type="continuous">
+  <origin xyz="0.0 0.0 0.3" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="rotary_link1"/>
+  <axis xyz="0.0 0.0 1.0"/>
+</joint>
+<transmission name="Revolute_1_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="Revolute_1">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="Revolute_1_actr">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<!-- <joint name="Revolute_2" type="continuous"> -->
+<joint name="Revolute_2" type="revolute">
+  <origin xyz="0.25 0.0 0.03" rpy="0 0 0"/>
+  <parent link="rotary_link1"/>
+  <child link="pendulum_link1"/>
+  <axis xyz="1.0 0.0 0.0"/>
+  <!-- <limit effort="100000" velocity="0.0001"/> -->
+  <limit effort="0.000001" velocity="0.000001" lower="-0.77" upper="0.77" />
+</joint>
+<transmission name="Revolute_2_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="Revolute_2">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="Revolute_2_actr">
+    <hardwareInterface>PositionJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+</robot>
